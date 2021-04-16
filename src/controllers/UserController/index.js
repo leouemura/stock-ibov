@@ -11,7 +11,7 @@ module.exports = {
     const id = crypto.randomBytes(4).toString('HEX')
 
     try{
-      const respCreateUser = await connection('users').insert({id, username, password})
+      const respCreateUser = await connection('users').insert({id: id, username: username, password: password})
       return res.json({id, username, password})
     }
     catch(err){
