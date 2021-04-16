@@ -15,7 +15,8 @@ module.exports = {
       return res.json({id, username, password})
     }
     catch(err){
-      console.log(err)
+      // console.log(err)
+      return res.send({message:"ocorreu um erro", err})
     }
   }
 }
