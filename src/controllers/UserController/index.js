@@ -15,7 +15,6 @@ module.exports = {
       return res.json({id, username, password})
     }
     catch(err){
-      // console.log(err)
       if(err.code === "23505"){
         return res.json({message:"usuario "+username+" ja existente!", ...err})
       }
@@ -32,9 +31,7 @@ module.exports = {
     const {id} = req.params
 
     try{
-      console.log('id_update: ', id)
       const verifyUser = await connection('users').where('id', id).select('*')
-      console.log('verifyUser: ',verifyUser)
       if(verifyUser.length !== 0){
         const respUpdateUser = await connection('users').where("id", id).update({id:id, username:username, password:password})
         return res.json({message:`usuario ${username} editado com sucesso`, id, username, password})
@@ -64,7 +61,6 @@ module.exports = {
   async show(req,res){
     const {id} = req.params
     try{
-      console.log('id_show: ', id)
       const respShowUser = await connection('users').select('*').where({id: id})
       return res.json(respShowUser)
     }
@@ -86,9 +82,7 @@ module.exports = {
   async delete(req,res){
     const {id} = req.params
     try{
-      console.log('id_delete: ', id)
       const verifyUser = await connection('users').where('id', id).select('*')
-      console.log('verifyUser: ',verifyUser)
       if(verifyUser.length !== 0){
         const respDeleteUsers = await connection('users').delete('*').where('id', id)
         return res.json({message:"usuario deletado com sucesso!", ...respDeleteUsers})
