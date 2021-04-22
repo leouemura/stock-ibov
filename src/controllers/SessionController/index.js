@@ -1,5 +1,6 @@
 const connection = require('../../database/connection')
 const crypto = require('crypto')
+const { wipe } = require('../UserController')
 
 module.exports = {
   async create(req, res) {
@@ -45,14 +46,40 @@ module.exports = {
   },
 
   async show(req,res){
-    const {id} = req.params
+    const {token} = req.params
     try{
-      console.log(id);
-      const showUserSession = await connection('session').select('*').where({user_id: id})
+      const showUserSession = await connection('session').select('*').where({token: token})
       return res.json(showUserSession)
     }
     catch(err){
       return res.json({message:"ocorreu um erro inesperado",...err})
+    }
+  },
+
+  async delete(req, res){
+    const { token } = req.params
+    try{
+      const verifyUserByToken = await connection('session').where('token', token).select('*')
+      if(verifyUserByToken.length !== 0){
+        const showUserSession = await connection('session').where({token: token}).delete('*')
+        return res.json({message: `Usuario deslogado com sucesso`})
+      }
+      else{
+        return res.json({message: `token invalido`})
+      }
+    }
+    catch(err){
+      return res.json({message:"ocorreu um erro inesperado", ...err})
+    }
+  },
+
+  async wipe(req,res){
+    try{
+      const showUserSession = await connection('session').delete('*')
+      return res.json({message: `Todos os usuarios foram deslogados do sistema`})
+    }
+    catch(err){
+      return res.json({message:"ocorreu um erro inesperado", ...err})
     }
   }
 }
